@@ -8,13 +8,13 @@ WORKDIR /app
 COPY ./app /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r req.txt
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
 # Define environment variable
-ENV POSTGRES_DB=mydatabase
+ENV POSTGRES_DB=bookDB
 ENV POSTGRES_USER=myuser
 ENV POSTGRES_PASSWORD=mypassword
 ENV POSTGRES_HOST=db
