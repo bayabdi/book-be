@@ -1,23 +1,39 @@
-version: '3'
+version: "3"
+
 services:
-  app:
-    build: .
+  db:
+    restart: always
+    image: postgres:15
     ports:
-      - "80:80"
+      - "5123:5432"
+    environment:
+      - POSTGRES_USER=su
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=bookDB
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    networks:
+      - book_net
+
+  web:
+    restart: always
+    build:
+      context: .
+    env_file:
+      - .env.master
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
     depends_on:
       - db
-    environment:
-      POSTGRES_DB: bookDB
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_HOST: db
-      POSTGRES_PORT: 5432
+    networks:
+      - book_net
 
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: bookDB
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-    ports:
-      - "5111:5432"
+
+volumes:
+  postgres: {}
+
+networks:
+  book_net:
+    external: true

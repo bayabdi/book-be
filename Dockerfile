@@ -1,24 +1,14 @@
-# Use an official Python runtime as a parent image
-FROM python:3.8-slim
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 
-# Set the working directory in the container
+# Set environment varibles
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
 
-# Copy the current directory contents into the container
-COPY ./app /app
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r req.txt
+COPY . /app/
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
-
-# Define environment variable
-ENV POSTGRES_DB=bookDB
-ENV POSTGRES_USER=myuser
-ENV POSTGRES_PASSWORD=mypassword
-ENV POSTGRES_HOST=db
-ENV POSTGRES_PORT=5432
-
-# Run app.py when the container launches
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --forwarded-allow-ips='*' --proxy-headers
