@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     USERS_OPEN_REGISTRATION: str
-    ALGORITHM: str = "HS512"
+    ALGORITHM: str = "HS256"
 
     ENVIRONMENT: Optional[str]
 

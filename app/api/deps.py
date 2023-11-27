@@ -7,7 +7,6 @@ from app.core import security
 from app.core.config import settings
 from app.db.session import SessionLocal
 from fastapi import Depends, Request, HTTPException, Security, status
-from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 

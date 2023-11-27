@@ -24,3 +24,9 @@ class UserUpdate(UserBase):
 class LoginModel(BaseModel):
     email: str
     password: str
+
+
+class TokenData:
+    sub: str | None = None
+    email: str | None = None
+    is_manager: bool = False
