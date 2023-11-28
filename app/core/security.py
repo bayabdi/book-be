@@ -10,6 +10,7 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 from passlib.context import CryptContext
 
+
 # OAuth2PasswordBearer for token handling
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -21,13 +22,6 @@ password_hash = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def create_jwt_token(data: dict) -> str:
     to_encode = data.copy()
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-
-
-def get_user(email: str):
-    user = crud.user.get_by_email(email)
-
-    if user is not None:
-        return user
 
 
 # Function to verify password

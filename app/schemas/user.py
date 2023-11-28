@@ -26,7 +26,8 @@ class LoginModel(BaseModel):
     password: str
 
 
+# Model for JWT token
 class TokenData:
-    sub: str | None = None
-    email: str | None = None
+    sub: str = None
+    username: str = None
     is_manager: bool = False

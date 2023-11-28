@@ -1,1 +1,1 @@
-from .user import UserCreate, UserUpdate, TokenData # noqa
+from .user import UserCreate, UserUpdate, TokenData, LoginModel # noqa
