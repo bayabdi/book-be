@@ -20,9 +20,12 @@ def register(
         raise HTTPException(status_code=400, detail="Username already registered")
 
     model.password = password_hash.hash(model.password)
+    print(model.password)
     crud.user.create(db, model)
 
-    return {"message": "User registered successfully"}
+    print("OK")
+
+    return "User registered successfully"
 
 
 @router.post("/login", response_model=str)
@@ -33,9 +36,9 @@ def login(
     user = crud.user.get_by_email(db, model.email)
 
     print(user.hashed_password)
-
-    if (user is None) or (verify_password(model.password, user.hashed_password)):
+    print(password_hash.hash(model.password))
+    if (user is None) or (not verify_password(model.password, user.hashed_password)):
         raise HTTPException(status_code=401, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
     token_data = {"sub": user.email, "username": user.email, "is_manager": user.is_manager}
     token = create_jwt_token(token_data)
-    return {"access_token": token, "token_type": "bearer"}
+    return token

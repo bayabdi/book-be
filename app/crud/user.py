@@ -14,6 +14,7 @@ def create(db: Session, model: UserCreate):
     db_model = User(
         full_name=model.full_name,
         email=model.email,
+        phone_number=model.phone_number,
         hashed_password=model.password
     )
 
