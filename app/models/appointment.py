@@ -1,5 +1,5 @@
 from app.db.base_class import Base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime
 
 
 class Appointment(Base):
@@ -8,4 +8,5 @@ class Appointment(Base):
     id = Column(Integer, primary_key=True)
     duration = Column(Integer)
     reason = Column(String)
+    start_time = Column(DateTime)
     status = Column(Integer)
