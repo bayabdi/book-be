@@ -17,8 +17,9 @@ class UserCreate(UserBase):
 
 
 # Properties to receive via API on update
-class UserUpdate(UserBase):
-    pass
+class User(UserBase):
+    id: str
+    is_manager: bool = False
 
 
 class LoginModel(BaseModel):

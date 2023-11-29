@@ -1,9 +1,4 @@
-from datetime import datetime, timedelta
-from typing import Any, Union
-
 from app.core.config import settings
-from app import crud
-from app.schemas.user import TokenData
 
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
@@ -30,7 +25,9 @@ def verify_password(plain_password, hashed_password):
 
 
 # Function to get current user
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(
+        token: str = Depends(oauth2_scheme)
+):
     credentials_exception = HTTPException(
         status_code=401, detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"}
     )
@@ -39,12 +36,6 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_data = TokenData(sub=username)
     except JWTError:
         raise credentials_exception
-    return token_data
-
-
-# Function to get current user roles
-def is_manager(current_user: TokenData = Depends(get_current_user)):
-    return current_user.is_manager
+    return username

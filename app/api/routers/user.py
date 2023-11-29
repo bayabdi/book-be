@@ -2,7 +2,7 @@ from typing import Any, List
 
 from app.api import deps
 from app import crud
-from app.schemas import UserCreate, LoginModel, TokenData
+from app.schemas import UserCreate, LoginModel, TokenData, User
 from app.core.security import password_hash, verify_password, create_jwt_token, get_current_user
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -33,10 +33,8 @@ def login(
         model: LoginModel,
         db: Session = Depends(deps.get_db),
 ) -> Any:
-    user = crud.user.get_by_email(db, model.email)
+    user = crud.user.get_by_email_with_password(db, model.email)
 
-    print(user.hashed_password)
-    print(password_hash.hash(model.password))
     if (user is None) or (not verify_password(model.password, user.hashed_password)):
         raise HTTPException(status_code=401, detail="Incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
     token_data = {"sub": user.email, "username": user.email, "is_manager": user.is_manager}
@@ -44,8 +42,12 @@ def login(
     return token
 
 
-@router.post("/test", response_model=str)
+@router.post("/test", response_model=User)
 def test(
-        current_user: TokenData = Depends(get_current_user)
+        email: str = Depends(get_current_user),
+        db: Session = Depends(deps.get_db)
+
 ) -> Any:
+    current_user = crud.user.get_by_email(db, email)
+    print(current_user)
     return current_user
