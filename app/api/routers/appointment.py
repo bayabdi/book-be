@@ -17,4 +17,16 @@ def add(
         email: str = Depends(get_current_user),
         db: Session = Depends(deps.get_db)
 ) -> Any:
-    return crud.appointment.add(db, model, email)
+    user = crud.user.get_by_email_with_password(db, email)
+    print(type(user.id))
+
+    return crud.appointment.add(db, model, user.id)
+
+
+@router.get("/list")
+def list_by_email(
+        email: str = Depends(get_current_user),
+        db: Session = Depends(deps.get_db)
+) -> Any:
+
+    return crud.appointment.list_by_email(db, email)

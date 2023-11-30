@@ -3,7 +3,11 @@ from pydantic import BaseModel
 
 
 class AppointmentBase(BaseModel):
-    Duration: int
-    StartTime: datetime
-    Reason: str
-    Status: int
+    duration: int
+    startTime: datetime
+    reason: str
+    status: int
+
+
+class Appointment(AppointmentBase):
+    id: int

@@ -4,6 +4,7 @@ from uuid import uuid4
 from app.db.base_class import Base
 from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
@@ -25,3 +26,4 @@ class User(Base):
         default=datetime.datetime.utcnow,
         onupdate=datetime.datetime.utcnow,
     )
+    appointments = relationship('Appointment', back_populates='user')
