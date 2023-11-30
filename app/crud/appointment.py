@@ -101,6 +101,7 @@ def change_status(db: Session, model: ChangeStatus):
 
 
 def check_availability(db: Session, model: Interval):
+    model.startTime = model.startTime.astimezone(timezone.utc)
     if datetime.now(timezone.utc) > model.startTime:
         return False
 
