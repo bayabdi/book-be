@@ -18,3 +18,8 @@ class AppointmentFull(Appointment):
     fullName: str
     email: str
     phoneNumber: str
+
+
+class ChangeStatus(BaseModel):
+    id: int
+    status: int

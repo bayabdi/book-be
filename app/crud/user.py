@@ -10,12 +10,6 @@ def get_by_email(db: Session, email: str) -> Optional[UserView]:
     db_user = db.query(User).filter(User.email == email).first()
 
     if db_user is not None:
-        print(db_user.id)
-        print(db_user.is_manager)
-        print(db_user.email)
-        print(db_user.full_name)
-        print(db_user.phone_number)
-
         return UserView(
             id=str(db_user.id),
             is_manager=db_user.is_manager,

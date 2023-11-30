@@ -49,12 +49,9 @@ def get_current_manager(
         status_code=401, detail="Could not validate credentials for manager", headers={"WWW-Authenticate": "Bearer"}
     )
     try:
-        print("OK-OK-OK")
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username: str = payload.get("sub")
         is_manager: bool = payload.get("is_manager")
-
-        print(is_manager)
 
         if username is None or (not is_manager):
             raise credentials_exception

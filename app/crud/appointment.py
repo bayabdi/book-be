@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from app.models.appointment import Appointment
 from app.models.user import User
-from app.schemas.appointment import AppointmentBase, Appointment as AppointmentView, AppointmentFull
+from app.schemas.appointment import AppointmentBase, Appointment as AppointmentView, AppointmentFull, ChangeStatus
 from sqlalchemy.orm import Session
 
 
@@ -85,3 +85,10 @@ def list_by_status(db: Session, status: int):
         ))
 
     return appointments
+
+
+def change_status(db: Session, model: ChangeStatus):
+    db_model = db.query(Appointment).filter(Appointment.id == model.id).first()
+    if db_model is not None:
+        db_model.status = model.status
+        db.commit()

@@ -2,7 +2,7 @@ from typing import Any, List
 
 from app.api import deps
 from app import crud
-from app.schemas import AppointmentBase
+from app.schemas import AppointmentBase, ChangeStatus
 from app.core.security import get_current_user, get_current_manager
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -39,3 +39,13 @@ def list_by_status(
         db: Session = Depends(deps.get_db)
 ) -> Any:
     return crud.appointment.list_by_status(db, status)
+
+
+@router.post("/change_status")
+def change_status(
+        model: ChangeStatus,
+        email: str = Depends(get_current_manager),
+        db: Session = Depends(deps.get_db)
+) -> Any:
+    print(model)
+    return crud.appointment.change_status(db, model)
