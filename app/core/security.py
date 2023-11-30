@@ -39,3 +39,25 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
     return username
+
+
+# Function to get current manager
+def get_current_manager(
+        token: str = Depends(oauth2_scheme)
+):
+    credentials_exception = HTTPException(
+        status_code=401, detail="Could not validate credentials for manager", headers={"WWW-Authenticate": "Bearer"}
+    )
+    try:
+        print("OK-OK-OK")
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username: str = payload.get("sub")
+        is_manager: bool = payload.get("is_manager")
+
+        print(is_manager)
+
+        if username is None or (not is_manager):
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    return username

@@ -11,3 +11,10 @@ class AppointmentBase(BaseModel):
 
 class Appointment(AppointmentBase):
     id: int
+
+
+class AppointmentFull(Appointment):
+    user_id: str
+    fullName: str
+    email: str
+    phoneNumber: str

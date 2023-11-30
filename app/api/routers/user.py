@@ -42,8 +42,8 @@ def login(
     return token
 
 
-@router.post("/test", response_model=User)
-def test(
+@router.post("/get_current_user", response_model=User)
+def get_current_user(
         email: str = Depends(get_current_user),
         db: Session = Depends(deps.get_db)
 

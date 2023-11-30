@@ -3,7 +3,7 @@ from typing import Any, List
 from app.api import deps
 from app import crud
 from app.schemas import AppointmentBase
-from app.core.security import password_hash, verify_password, create_jwt_token, get_current_user
+from app.core.security import get_current_user, get_current_manager
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -30,3 +30,12 @@ def list_by_email(
 ) -> Any:
 
     return crud.appointment.list_by_email(db, email)
+
+
+@router.get("/list_by_status")
+def list_by_status(
+        status: int = 1,
+        email: str = Depends(get_current_manager),
+        db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.appointment.list_by_status(db, status)
