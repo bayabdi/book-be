@@ -23,3 +23,8 @@ class AppointmentFull(Appointment):
 class ChangeStatus(BaseModel):
     id: int
     status: int
+
+
+class Interval(BaseModel):
+    startTime: datetime
+    duration: int

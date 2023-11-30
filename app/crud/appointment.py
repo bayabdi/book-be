@@ -2,8 +2,14 @@ from typing import Any, Dict, List, Optional, Union
 
 from app.models.appointment import Appointment
 from app.models.user import User
-from app.schemas.appointment import AppointmentBase, Appointment as AppointmentView, AppointmentFull, ChangeStatus
+from datetime import datetime, timezone
+from app.schemas.appointment import AppointmentBase,\
+    Appointment as AppointmentView,\
+    AppointmentFull, \
+    ChangeStatus,\
+    Interval
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 
 def add(db: Session, model: AppointmentBase, user_id):
@@ -92,3 +98,22 @@ def change_status(db: Session, model: ChangeStatus):
     if db_model is not None:
         db_model.status = model.status
         db.commit()
+
+
+def check_availability(db: Session, model: Interval):
+    if datetime.now(timezone.utc) > model.startTime:
+        return False
+
+    begin_time = model.startTime.timestamp()
+    end_time = begin_time + model.duration * 60
+
+    query = (
+        db.query(func.count(Appointment.id))
+        .filter(
+            func.greatest(func.extract('epoch', Appointment.start_time), begin_time) <= func.least(
+                func.extract('epoch', Appointment.start_time) + Appointment.duration * 60, end_time),
+            Appointment.status == 2  # approved status
+        )
+    )
+
+    return query.scalar() < 1
