@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_db() -> Generator:
+    db = SessionLocal()
     try:
-        db = SessionLocal()
         yield db
     finally:
         db.close()

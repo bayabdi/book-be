@@ -13,7 +13,7 @@ from sqlalchemy import func
 
 
 def add(db: Session, model: AppointmentBase, user_id):
-    print(model, user_id)
+    model.startTime = model.startTime.astimezone(timezone.utc)
     db_model = Appointment(
         duration=model.duration,
         reason=model.reason,
@@ -24,6 +24,10 @@ def add(db: Session, model: AppointmentBase, user_id):
 
     db.add(db_model)
     db.commit()
+
+
+def get_by_id(db: Session, appoint_id):
+    return db.query(Appointment).filter(Appointment.id == appoint_id).first()
 
 
 def list_by_email(db: Session, email: str):

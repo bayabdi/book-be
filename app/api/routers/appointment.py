@@ -18,7 +18,12 @@ def add(
         db: Session = Depends(deps.get_db)
 ) -> Any:
     user = crud.user.get_by_email_with_password(db, email)
-    print(type(user.id))
+
+    if not crud.appointment.check_availability(db, Interval(
+        startTime=model.startTime,
+        duration=model.duration
+    )):
+        raise HTTPException(status_code=400, detail="Can't fit, choose other time")
 
     return crud.appointment.add(db, model, user.id)
 
@@ -47,6 +52,18 @@ def change_status(
         email: str = Depends(get_current_manager),
         db: Session = Depends(deps.get_db)
 ) -> Any:
+
+    appointment = crud.appointment.get_by_id(db, model.id)
+
+    if appointment is None:
+        raise HTTPException(status_code=404, detail="Not found")
+
+    if (model.status == 2) and not crud.appointment.check_availability(db, Interval(
+        startTime=appointment.start_time,
+        duration=appointment.duration
+    )):
+        raise HTTPException(status_code=400, detail="Can't fit, choose other time")
+
     return crud.appointment.change_status(db, model)
 
 
