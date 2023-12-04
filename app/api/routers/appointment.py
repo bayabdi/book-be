@@ -78,21 +78,3 @@ def check_availability(
     db: Session = Depends(deps.get_db)
 ) -> Any:
     return crud.appointment.check_availability(db, model)
-
-from dotenv import load_dotenv
-import os
-import json
-
-load_dotenv()
-
-@router.get("/test")
-def test(
-        id: int
-):
-    load_dotenv()
-    # Load credentials from the JSON file
-    credentials_file = os.getenv("CREDENTIALS_FILE", "credentials.json")
-    with open(credentials_file, "r") as file:
-        credentials = json.load(file)
-        return credentials
-    print(id)
