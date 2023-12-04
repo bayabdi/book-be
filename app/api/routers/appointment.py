@@ -31,11 +31,12 @@ def add(
 
 @router.get("/list")
 def list_by_email(
+        status: int,
         email: str = Depends(get_current_user),
         db: Session = Depends(deps.get_db)
 ) -> Any:
 
-    return crud.appointment.list_by_email(db, email)
+    return crud.appointment.list_by_email(db, email, status)
 
 
 @router.get("/list_by_status")
@@ -68,7 +69,6 @@ def change_status(
         else:
             services.google_calendar.add(appointment)
 
-    return "OK"
     return crud.appointment.change_status(db, model)
 
 

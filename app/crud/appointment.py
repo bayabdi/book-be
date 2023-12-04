@@ -30,7 +30,7 @@ def get_by_id(db: Session, appoint_id):
     return db.query(Appointment).filter(Appointment.id == appoint_id).first()
 
 
-def list_by_email(db: Session, email: str):
+def list_by_email(db: Session, email: str, status: int):
     result = (
         db.query(
             Appointment.id,
@@ -40,7 +40,7 @@ def list_by_email(db: Session, email: str):
             Appointment.status
         )
         .join(User, Appointment.user_id == User.id)
-        .filter(User.email == email)
+        .filter(User.email == email, Appointment.status == status)
         .order_by(Appointment.start_time)
         .all()
     )
