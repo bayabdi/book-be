@@ -17,7 +17,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.co
 def add(model: Appointment):
 
     credentials = service_account.Credentials.from_service_account_file(
-        'credentials.json', scopes=SCOPES)
+        'credentials/google.calendar.json', scopes=SCOPES)
 
     # Build the Google Calendar API service
     service = build('calendar', 'v3', credentials=credentials)
