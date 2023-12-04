@@ -52,6 +52,9 @@ coverage.xml
 cover/
 .idea/
 
+credentials/
+
+
 # Translations
 *.mo
 *.pot
