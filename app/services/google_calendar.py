@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from app.models.appointment import Appointment
 from fastapi import HTTPException
 
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/compute']
 
 
 def add(model: Appointment):
@@ -24,10 +24,13 @@ def add(model: Appointment):
 
     # Define the event details
     event_body = {
-        'summary': "Doctor meeting",
+        'summary': "Doctor meeting " + model.user.full_name,
         'description': model.reason,
         'start': {'dateTime': model.start_time.isoformat(), 'timeZone': 'GMT'},
         'end': {'dateTime': (model.start_time + timedelta(minutes=model.duration)).isoformat(), 'timeZone': 'GMT'},
+        # 'attendees': [
+        #    {'email': model.user.email}
+        # ],
     }
 
     try:

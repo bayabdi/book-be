@@ -8,6 +8,7 @@ from app.schemas.appointment import AppointmentBase,\
     AppointmentFull, \
     ChangeStatus,\
     Interval
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
@@ -27,7 +28,11 @@ def add(db: Session, model: AppointmentBase, user_id):
 
 
 def get_by_id(db: Session, appoint_id):
-    return db.query(Appointment).filter(Appointment.id == appoint_id).first()
+    return db.query(Appointment)\
+        .filter(Appointment.id == appoint_id)\
+        .join(Appointment.user)\
+        .options(joinedload(Appointment.user))\
+        .first()
 
 
 def list_by_email(db: Session, email: str, status: int):
