@@ -4,6 +4,7 @@ from app.api import deps
 from app import crud
 from app.schemas import AppointmentBase, ChangeStatus, Interval
 from app.core.security import get_current_user, get_current_manager
+from app import services
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -58,12 +59,16 @@ def change_status(
     if appointment is None:
         raise HTTPException(status_code=404, detail="Not found")
 
-    if (model.status == 2) and not crud.appointment.check_availability(db, Interval(
-        startTime=appointment.start_time,
-        duration=appointment.duration
-    )):
-        raise HTTPException(status_code=400, detail="Can't fit, choose other time")
+    if model.status == 2:
+        if not crud.appointment.check_availability(db, Interval(
+            startTime=appointment.start_time,
+            duration=appointment.duration
+        )):
+            raise HTTPException(status_code=400, detail="Can't fit, choose other time")
+        else:
+            services.google_calendar.add(appointment)
 
+    return "OK"
     return crud.appointment.change_status(db, model)
 
 
@@ -73,3 +78,21 @@ def check_availability(
     db: Session = Depends(deps.get_db)
 ) -> Any:
     return crud.appointment.check_availability(db, model)
+
+from dotenv import load_dotenv
+import os
+import json
+
+load_dotenv()
+
+@router.get("/test")
+def test(
+        id: int
+):
+    load_dotenv()
+    # Load credentials from the JSON file
+    credentials_file = os.getenv("CREDENTIALS_FILE", "credentials.json")
+    with open(credentials_file, "r") as file:
+        credentials = json.load(file)
+        return credentials
+    print(id)
