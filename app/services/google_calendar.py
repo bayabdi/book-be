@@ -12,6 +12,7 @@ from app.models.appointment import Appointment
 from fastapi import HTTPException
 
 SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/compute']
+CALENDAR_ID = '13307580aace372822f320c1f7da584ef556090fe1e8ee7ee01fd3885d26533c@group.calendar.google.com'
 
 
 def add(model: Appointment):
@@ -34,7 +35,7 @@ def add(model: Appointment):
     }
 
     try:
-        event = service.events().insert(calendarId='primary', body=event_body).execute()
+        event = service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
         return {"message": f'Event created: {event.get("htmlLink")}'}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error adding event to Google Calendar: {str(e)}")
